@@ -25,53 +25,76 @@
  */
 
 #include "threadSafeElement.h"
+#include <climits>
+#include <chrono>
+#include <thread>
 
 bool ThreadSafeElement::ReadResource() {
 
+	//	//>=0 indicates that the method is not in use.
+	if (++_readerCount > 0)
+	{
+		return true;
+	}
 
+	std::chrono::milliseconds sleepDuration(10);
 
+	//another thread writes something, so lets wait
+	for (int i = 0; i < INT_MAX; ++i)
+	{
+		//readerCount was incremented in the if clause, so lets decrement it again
+		--_readerCount;
+
+		if (i%10000 == 9999)
+		{
+			std::this_thread::sleep_for(sleepDuration);
+		}
+
+		if (++_readerCount > 0)
+		{
+			return true;
+		}
+	}
 
 	return false;
+}
 
-//	//>=0 indicates that the method is not in use.
-//	if (state_.)
-//	{
-//		//Code to access a resource that is not thread safe would go here.
-//		return true;
-//	}
-//
-//
-//
-//	            //another thread writes something, so lets wait
-//
-//
-//				for (var i = 0; i < int.MaxValue; i++)
-//	            {
-//
-//	                //usingResource was incremented in the if clause, so lets decrement it again
-//
-//	                Interlocked.Decrement(ref _usingResource);
-//
-//
-//
-//	                if (i%10000 == 9999)
-//	                {
-//	                    Thread.Sleep(1);
-//	                }
-//
-//
-//
-//	                if (Interlocked.Increment(ref _usingResource) > 0)
-//
-//	                {
-//
-//	                    return true;
-//
-//	                }
-//
-//	            }
-//
-//
-//
-//	            return false;
+void ThreadSafeElement::FinishReadResource() {
+	//Release the lock
+	--_readerCount;
+}
+
+bool ThreadSafeElement::WriteResource() {
+
+	int tstVal = 0;
+
+	if(_readerCount.compare_exchange_strong( tstVal, -200000000 ))
+	{
+		return true;
+	}
+
+	std::chrono::milliseconds sleepDuration(10);
+
+	int newVal = -200000000;
+
+	for (int i = 0; i < INT_MAX; ++i)
+	{
+
+		if (i%10000 == 9999)
+		{
+			std::this_thread::sleep_for(sleepDuration);
+		}
+
+		if (_readerCount.compare_exchange_strong( tstVal, newVal ))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void ThreadSafeElement::FinishWriteResource() {
+
+	_readerCount.store(0);
 }

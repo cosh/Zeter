@@ -33,5 +33,5 @@ ENDIF(CPack_CMake_INCLUDED)
 
 ADD_SUBDIRECTORY(doxygen)
 ADD_SUBDIRECTORY(src build-src)
-#ADD_SUBDIRECTORY(tests build-tests)
+ADD_SUBDIRECTORY(tests build-tests)
 ADD_SUBDIRECTORY(include build-include)

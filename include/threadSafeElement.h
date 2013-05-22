@@ -32,12 +32,10 @@
 class ThreadSafeElement {
 
 private:
-	typedef enum {Read, Write} LockState;
-	LockState _state;
 	std::atomic<int> _readerCount;
 
 public:
-	ThreadSafeElement() : _state(Read), _readerCount(0) {}
+	ThreadSafeElement() : _readerCount(0) {}
 
 	bool ReadResource();
 	void FinishReadResource ();
