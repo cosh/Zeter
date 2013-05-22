@@ -1,5 +1,5 @@
 INSTALL(FILES  
-        zeter.h 
+        threadSafeElement.h
         DESTINATION include/
         )
 

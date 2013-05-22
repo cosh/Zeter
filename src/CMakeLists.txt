@@ -1,7 +1,7 @@
 INCLUDE_DIRECTORIES(../include/)
 
 SET(ZETER_SRC ${ZETER_SRC}
-  zeter.cpp
+  threadSafeElement.cpp
 )
 
 ADD_LIBRARY(ZETER ${ZETER_SRC})
