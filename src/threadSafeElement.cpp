@@ -37,7 +37,7 @@ bool ThreadSafeElement::ReadResource() {
 		return true;
 	}
 
-	std::chrono::milliseconds sleepDuration(10);
+	std::chrono::milliseconds sleepDuration(1);
 
 	//another thread writes something, so lets wait
 	for (int i = 0; i < INT_MAX; ++i)
@@ -68,14 +68,14 @@ bool ThreadSafeElement::WriteResource() {
 
 	int tstVal = 0;
 
-	if(_readerCount.compare_exchange_strong( tstVal, -200000000 ))
+	if(_readerCount.compare_exchange_strong( tstVal, -10000 ))
 	{
 		return true;
 	}
 
-	std::chrono::milliseconds sleepDuration(10);
+	std::chrono::milliseconds sleepDuration(1);
 
-	int newVal = -200000000;
+	int newVal = -10000;
 
 	for (int i = 0; i < INT_MAX; ++i)
 	{
