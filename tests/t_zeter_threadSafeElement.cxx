@@ -76,7 +76,7 @@ TEST(test_zeter_threadSafeElement_mixed) {
 
 	int readCount = 30000;
 	int writeCount = 5000;
-	int timeout = 2;
+	int timeout = 1;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
@@ -96,7 +96,7 @@ TEST(test_zeter_threadSafeElement_mixed) {
 
 TEST(test_zeter_threadSafeElement_read) {
 
-	int readCount = 300000;
+	int readCount = 30000;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
@@ -113,7 +113,7 @@ TEST(test_zeter_threadSafeElement_read) {
 TEST(test_zeter_threadSafeElement_write) {
 
 	int writeCount = 5000;
-	int timeout = 2;
+	int timeout = 1;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 

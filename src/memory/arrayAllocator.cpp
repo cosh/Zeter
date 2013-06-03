@@ -24,4 +24,4 @@
 
  */
 
-#include "arrayAllocator.h"
+#include "memory/arrayAllocator.h"

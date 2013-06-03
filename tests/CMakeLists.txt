@@ -1,4 +1,5 @@
 INCLUDE_DIRECTORIES(../include/)
+INCLUDE_DIRECTORIES(../include/memory)
 
 MACRO(ZETER_TEST name)
         ADD_EXECUTABLE(${name} ${name}.cxx)

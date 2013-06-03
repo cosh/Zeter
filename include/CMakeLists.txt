@@ -1,6 +1,7 @@
 INSTALL(FILES  
         threadSafeElement.h
-        arrayAllocator.h
+        memory/arrayAllocator.h
+        memory/growthByNextPowerOfTwo.h
         DESTINATION include/
         )
 

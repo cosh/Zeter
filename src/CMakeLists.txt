@@ -2,7 +2,8 @@ INCLUDE_DIRECTORIES(../include/)
 
 SET(ZETER_SRC ${ZETER_SRC}
   threadSafeElement.cpp
-  arrayAllocator.cpp
+  memory/arrayAllocator.cpp
+  memory/growthByNextPowerOfTwo.cpp
 )
 
 ADD_LIBRARY(ZETER ${ZETER_SRC})
