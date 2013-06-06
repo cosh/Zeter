@@ -7,6 +7,11 @@
 #include "threadSafeElement.h"
 #include <boost/pool/object_pool.hpp>
 #include "memory/growthByNextPowerOfTwo.h"
+#include <string>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
+#include <array>
 
 TEST(test_zeter_objectPool_basic) {
 
@@ -18,7 +23,6 @@ TEST(test_zeter_objectPool_basic) {
 
 	return 0;
 }
-
 
 TEST(test_zeter_objectPool_growth) {
 

@@ -38,11 +38,13 @@ class ArrayAllocator {
 
 private:
 
-	const boost::object_pool<TObject>* _poolpool[];
+	typedef std::array<boost::object_pool<TObject>, 42> ArrayOfArrayPools;
+	const ArrayOfArrayPools _poolArray;
 
 public:
 
-	TObject* const GetArray(const ulong size);
+	explicit ArrayAllocator();
+	TObject * const GetArray(const int size);
 };
 
 #endif
