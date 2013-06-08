@@ -27,18 +27,18 @@
 #ifndef _arrayAllocatort_h
 #define _arrayAllocator_h
 
-#include "boost/pool/object_pool.hpp"
+#include "boost/pool/pool.hpp"
 
 /**
  * TObject is the type of the object that is inside the arrays
  * TArraySizer is the type of the object that is responsible for sizing the arrays
  */
-template <class TObject, class TArraySizer>
+template <class TObject, class TArraySizer, int slots>
 class ArrayAllocator {
 
 private:
 
-	typedef std::array<boost::object_pool<TObject>, 42> ArrayOfArrayPools;
+	typedef std::array<boost::pool<>, slots> ArrayOfArrayPools;
 	const ArrayOfArrayPools _poolArray;
 
 public:

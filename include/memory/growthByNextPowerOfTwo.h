@@ -35,6 +35,8 @@ private:
 public:
 
 	int GetNextSize(int size);
+	int GetSizeOfSlot(int slotIntex);
+
 };
 
 #endif

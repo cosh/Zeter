@@ -25,6 +25,7 @@
  */
 
 #include "memory/growthByNextPowerOfTwo.h"
+#include <math.h>
 
 int GrowthByNextPowerOfTwo::GetNextSize(int size) {
 	if(!IsPowerOf2(size))
@@ -46,4 +47,8 @@ int GrowthByNextPowerOfTwo::GetNextSize(int size) {
 bool GrowthByNextPowerOfTwo::IsPowerOf2(int n)
 {
 	 return (n & (n - 1))==0;
+}
+
+int GrowthByNextPowerOfTwo::GetSizeOfSlot(int slotIndex) {
+	return pow (2, slotIndex);
 }
