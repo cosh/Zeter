@@ -1,17 +1,18 @@
 #include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 #include "zeter_tests.h"
 #include "threadSafeElement.h"
 #include <boost/pool/object_pool.hpp>
 #include "memory/growthByNextPowerOfTwo.h"
-#include <string>
-#include <iterator>
-#include <iostream>
-#include <algorithm>
-#include <array>
+#include "memory/arrayAllocator.h"
+
+TEST(test_zeter_arrayAllocator_basic) {
+
+	const std::size_t size = 10;
+	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator = new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
+	delete(allocator);
+
+	return 0;
+}
 
 TEST(test_zeter_objectPool_basic) {
 
@@ -58,6 +59,7 @@ int main() {
 
 	test_zeter_objectPool_basic();
 	test_zeter_objectPool_growth();
+	test_zeter_arrayAllocator_basic();
 
 	return err ? -1 : 0;
 }
