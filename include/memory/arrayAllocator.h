@@ -73,7 +73,7 @@ public:
 
 	TObject * const GetArray(const int size)
 	{
-		return static_cast<TObject *>(_poolArray->at(_sizer->GetNextSize(size))->malloc());
+		return static_cast<TObject *>(_poolArray->at(_sizer->GetSlotForSize(_sizer->GetNextSize(size)))->malloc());
 	}
 };
 

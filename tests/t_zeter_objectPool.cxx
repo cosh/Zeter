@@ -10,15 +10,25 @@ TEST(test_zeter_arrayAllocator_basic) {
 	const std::size_t size = 10;
 	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator = new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
 
-	//ThreadSafeElement* firstElementOfArray_0 = allocator->GetArray(0);
+	ThreadSafeElement* firstElementOfArray_0 = allocator->GetArray(0);
+	firstElementOfArray_0->ReadResource();
+	firstElementOfArray_0->FinishReadResource();
 
-	//ThreadSafeElement* firstElementOfArray_1 = allocator->GetArray(1);
+	ThreadSafeElement* firstElementOfArray_1 = allocator->GetArray(1);
+	firstElementOfArray_1->ReadResource();
+	firstElementOfArray_1->FinishReadResource();
 
-	//ThreadSafeElement* firstElementOfArray_2 = allocator->GetArray(2);
+	ThreadSafeElement* firstElementOfArray_2 = allocator->GetArray(2);
+	firstElementOfArray_2->ReadResource();
+	firstElementOfArray_2->FinishReadResource();
 
-	//ThreadSafeElement* firstElementOfArray_3 = allocator->GetArray(4);
+	ThreadSafeElement* firstElementOfArray_3 = allocator->GetArray(4);
+	firstElementOfArray_3->ReadResource();
+	firstElementOfArray_3->FinishReadResource();
 
-	//ThreadSafeElement* firstElementOfArray_4 = allocator->GetArray(126);
+	ThreadSafeElement* firstElementOfArray_4 = allocator->GetArray(126);
+	firstElementOfArray_4->ReadResource();
+	firstElementOfArray_4->FinishReadResource();
 
 	delete(allocator);
 
