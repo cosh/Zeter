@@ -76,16 +76,20 @@ TEST(test_zeter_growth_GetSlotForSize) {
 	assert(newValue == 0);
 
 	newValue = growth.GetSlotForSize(1);
-	assert(newValue == 1);
+	assert(newValue == 0);
 
 	newValue = growth.GetSlotForSize(2);
-	assert(newValue == 2);
+	assert(newValue == 1);
 
 	newValue = growth.GetSlotForSize(3);
-	assert(newValue == 2);
+	assert(newValue == 1);
+
 
 	newValue = growth.GetSlotForSize(4);
-	assert(newValue == 3);
+	assert(newValue == 2);
+
+	newValue = growth.GetSlotForSize(4294967296);
+	assert(newValue == 32);
 
 	return 0;
 }
