@@ -39,26 +39,42 @@ class ArrayAllocator {
 
 private:
 	const std::size_t _slots;
-	TArraySizer _sizer;
-	std::array<boost::pool<>*, slots> _poolArray;
+	TArraySizer* _sizer;
+	std::array<boost::pool<>*, slots>* _poolArray;
 
 public:
 
 	explicit ArrayAllocator() :
 			_slots(slots)
-			 {
+			{
+
+		_sizer = new TArraySizer();
+		_poolArray = new std::array<boost::pool<>*, slots>();
 
 		for (std::size_t i = 0; i < _slots; ++i) {
 			size_t templateSize = 0;
-			int sizeOfSlot = _sizer.GetSizeOfSlot(i);
+			int sizeOfSlot = _sizer->GetSizeOfSlot(i);
 
 			templateSize = sizeof(TObject*) * sizeOfSlot;
 
-			_poolArray[i] = new boost::pool<>(templateSize);
+			_poolArray->at(i) = new boost::pool<>(templateSize);
 		}
+
 	}
 
-	TObject * const GetArray(const int size);
+	~ArrayAllocator() {
+		for (std::size_t i = 0; i < _slots; ++i) {
+			delete(_poolArray->at(i));
+		}
+
+		delete(_poolArray);
+		delete(_sizer);
+	}
+
+	TObject * const GetArray(const int size)
+	{
+		return static_cast<TObject *>(_poolArray->at(_sizer->GetNextSize(size))->malloc());
+	}
 };
 
 #endif

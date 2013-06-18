@@ -30,13 +30,13 @@
 class GrowthByNextPowerOfTwo {
 
 private:
-	bool IsPowerOf2(int n);
+	bool IsPowerOf2(long long n);
 
 public:
 
-	int GetNextSize(int size);
-	int GetSizeOfSlot(int slotIntex);
-
+	long long GetNextSize(long long size);
+	long long GetSizeOfSlot(int slotIntex);
+	int GetSlotForSize(long long n);
 };
 
 #endif

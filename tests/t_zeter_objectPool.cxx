@@ -9,6 +9,17 @@ TEST(test_zeter_arrayAllocator_basic) {
 
 	const std::size_t size = 10;
 	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator = new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
+
+	//ThreadSafeElement* firstElementOfArray_0 = allocator->GetArray(0);
+
+	//ThreadSafeElement* firstElementOfArray_1 = allocator->GetArray(1);
+
+	//ThreadSafeElement* firstElementOfArray_2 = allocator->GetArray(2);
+
+	//ThreadSafeElement* firstElementOfArray_3 = allocator->GetArray(4);
+
+	//ThreadSafeElement* firstElementOfArray_4 = allocator->GetArray(126);
+
 	delete(allocator);
 
 	return 0;
@@ -20,12 +31,14 @@ TEST(test_zeter_objectPool_basic) {
 
 	for (int i = 0; i < 10000; ++i) {
 		ThreadSafeElement * const t = p.malloc();
+		t->ReadResource();
+		t->FinishReadResource();
 	}
 
 	return 0;
 }
 
-TEST(test_zeter_objectPool_growth) {
+TEST(test_zeter_growth_GetNextSize) {
 
 	GrowthByNextPowerOfTwo growth;
 
@@ -54,11 +67,35 @@ TEST(test_zeter_objectPool_growth) {
 	return 0;
 }
 
+TEST(test_zeter_growth_GetSlotForSize) {
+
+	GrowthByNextPowerOfTwo growth;
+
+	int newValue = growth.GetSlotForSize(0);
+
+	assert(newValue == 0);
+
+	newValue = growth.GetSlotForSize(1);
+	assert(newValue == 1);
+
+	newValue = growth.GetSlotForSize(2);
+	assert(newValue == 2);
+
+	newValue = growth.GetSlotForSize(3);
+	assert(newValue == 2);
+
+	newValue = growth.GetSlotForSize(4);
+	assert(newValue == 3);
+
+	return 0;
+}
+
 int main() {
 	int err = 0;
 
 	test_zeter_objectPool_basic();
-	test_zeter_objectPool_growth();
+	test_zeter_growth_GetNextSize();
+	test_zeter_growth_GetSlotForSize();
 	test_zeter_arrayAllocator_basic();
 
 	return err ? -1 : 0;
