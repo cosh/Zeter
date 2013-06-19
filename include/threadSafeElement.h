@@ -42,6 +42,8 @@ public:
 
 	bool WriteResource();
 	void FinishWriteResource ();
+
+	int GetStatus();
 };
 
 #endif

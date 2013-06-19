@@ -26,33 +26,24 @@
 
 #include "threadSafeElement.h"
 #include <climits>
-#include <chrono>
 #include <thread>
 
 bool ThreadSafeElement::ReadResource() {
 
 	//	//>=0 indicates that the method is not in use.
-	if (++_readerCount > 0)
-	{
+	if (++_readerCount > 0) {
 		return true;
 	}
 
-	std::chrono::milliseconds sleepDuration(1);
-
 	//another thread writes something, so lets wait
-	for (int i = 0; i < INT_MAX; ++i)
-	{
+	for (int i = 0; i < INT_MAX; ++i) {
 		//readerCount was incremented in the if clause, so lets decrement it again
 		--_readerCount;
 
-		if (i%10000 == 9999)
-		{
-			std::this_thread::sleep_for(sleepDuration);
-		}
-
-		if (++_readerCount > 0)
-		{
+		if (++_readerCount > 0) {
 			return true;
+		} else {
+			std::this_thread::yield(); // other threads can push work to the queue now
 		}
 	}
 
@@ -65,29 +56,18 @@ void ThreadSafeElement::FinishReadResource() {
 }
 
 bool ThreadSafeElement::WriteResource() {
+	int  tst_val= 0;
+	int  new_val= -10000;
 
-	int tstVal = 0;
-
-	if(_readerCount.compare_exchange_strong( tstVal, -10000 ))
-	{
+	if (_readerCount.compare_exchange_strong(tst_val, new_val)) {
 		return true;
 	}
 
-	std::chrono::milliseconds sleepDuration(1);
-
-	int newVal = -10000;
-
-	for (int i = 0; i < INT_MAX; ++i)
-	{
-
-		if (i%10000 == 9999)
-		{
-			std::this_thread::sleep_for(sleepDuration);
-		}
-
-		if (_readerCount.compare_exchange_strong( tstVal, newVal ))
-		{
+	for (int i = 0; i < INT_MAX; ++i) {
+		if (_readerCount.compare_exchange_strong(tst_val, new_val)) {
 			return true;
+		} else {
+			std::this_thread::yield(); // other threads can push work to the queue now
 		}
 	}
 
@@ -95,6 +75,9 @@ bool ThreadSafeElement::WriteResource() {
 }
 
 void ThreadSafeElement::FinishWriteResource() {
-
 	_readerCount.store(0);
+}
+
+int ThreadSafeElement::GetStatus() {
+	return _readerCount.load();
 }

@@ -57,12 +57,9 @@ void Read(int count, ThreadSafeElement* elemenet) {
 	}
 }
 
-void Write(int count, int timeOut, ThreadSafeElement* elemenet) {
-	std::chrono::milliseconds sleepDuration(timeOut);
+void Write(int count, ThreadSafeElement* elemenet) {
 
 	for (int i = 0; i < count; ++i) {
-
-		std::this_thread::sleep_for(sleepDuration);
 
 		if (elemenet->WriteResource()) {
 			elemenet->FinishWriteResource();
@@ -76,15 +73,14 @@ TEST(test_zeter_threadSafeElement_mixed) {
 
 	int readCount = 30000;
 	int writeCount = 5000;
-	int timeout = 1;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
 	std::thread a(Read, readCount, element);
 	std::thread b(Read, readCount, element);
 	std::thread c(Read, readCount, element);
-	std::thread d(Write, writeCount, timeout, element);
-	std::thread e(Write, writeCount, timeout, element);
+	std::thread d(Write, writeCount, element);
+	std::thread e(Write, writeCount, element);
 	a.join();
 	b.join();
 	c.join();
@@ -96,7 +92,7 @@ TEST(test_zeter_threadSafeElement_mixed) {
 
 TEST(test_zeter_threadSafeElement_read) {
 
-	int readCount = 30000;
+	int readCount = 300000;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
@@ -112,19 +108,20 @@ TEST(test_zeter_threadSafeElement_read) {
 
 TEST(test_zeter_threadSafeElement_write) {
 
-	int writeCount = 5000;
-	int timeout = 1;
+	int writeCount = 300000;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
-	std::thread d(Write, writeCount, timeout, element);
-	std::thread e(Write, writeCount, timeout, element);
-	std::thread f(Write, writeCount, timeout, element);
-	std::thread g(Write, writeCount, timeout, element);
+	std::thread d(Write, writeCount, element);
+	std::thread e(Write, writeCount, element);
+	std::thread f(Write, writeCount, element);
+	std::thread g(Write, writeCount, element);
 	d.join();
 	e.join();
 	f.join();
 	g.join();
+
+	element->GetStatus();
 
 	return 0;
 }
@@ -134,7 +131,7 @@ int main() {
 
 	test_zeter_atomc_basic();
 	test_zeter_atomc_basic_compareExchange();
-	test_zeter_threadSafeElement_mixed();
+	//test_zeter_threadSafeElement_mixed();
 	test_zeter_threadSafeElement_read();
 	test_zeter_threadSafeElement_write();
 
