@@ -7,7 +7,7 @@
 #include <atomic>
 #include <thread>
 #include <chrono>
-#include "threadSafeElement.h"
+#include "synchronization/threadSafeElement.h"
 
 TEST(test_zeter_atomc_basic) {
 
@@ -69,10 +69,10 @@ void Write(int count, ThreadSafeElement* elemenet) {
 	}
 }
 
-TEST(test_zeter_threadSafeElement_mixed) {
+/*TEST(test_zeter_threadSafeElement_mixed) {
 
-	int readCount = 30000;
-	int writeCount = 5000;
+	int readCount = 3000000;
+	int writeCount = 10;
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
@@ -88,7 +88,7 @@ TEST(test_zeter_threadSafeElement_mixed) {
 	e.join();
 
 	return 0;
-}
+}*/
 
 TEST(test_zeter_threadSafeElement_read) {
 
@@ -102,6 +102,8 @@ TEST(test_zeter_threadSafeElement_read) {
 	a.join();
 	b.join();
 	c.join();
+
+	assert(element->GetStatus() == 0);
 
 	return 0;
 }
@@ -121,7 +123,7 @@ TEST(test_zeter_threadSafeElement_write) {
 	f.join();
 	g.join();
 
-	element->GetStatus();
+	assert(element->GetStatus() == 0);
 
 	return 0;
 }

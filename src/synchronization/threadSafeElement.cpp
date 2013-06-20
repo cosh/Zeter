@@ -24,29 +24,25 @@
 
  */
 
-#include "threadSafeElement.h"
 #include <climits>
 #include <thread>
+#include "synchronization/threadSafeElement.h"
 
 bool ThreadSafeElement::ReadResource() {
 
 	//	//>=0 indicates that the method is not in use.
-	if (++_readerCount > 0) {
+	if (++_readerCount > 0l) {
 		return true;
 	}
 
-	//another thread writes something, so lets wait
-	for (int i = 0; i < INT_MAX; ++i) {
+	while (true) {
 		//readerCount was incremented in the if clause, so lets decrement it again
 		--_readerCount;
 
-		if (++_readerCount > 0) {
+		if (++_readerCount > 0l) {
 			return true;
-		} else {
-			std::this_thread::yield(); // other threads can push work to the queue now
 		}
 	}
-
 	return false;
 }
 
@@ -56,18 +52,16 @@ void ThreadSafeElement::FinishReadResource() {
 }
 
 bool ThreadSafeElement::WriteResource() {
-	int  tst_val= 0;
-	int  new_val= -10000;
+	long tst_val = 0;
+	long new_val = -1000000;
 
 	if (_readerCount.compare_exchange_strong(tst_val, new_val)) {
 		return true;
 	}
 
-	for (int i = 0; i < INT_MAX; ++i) {
+	while (true) {
 		if (_readerCount.compare_exchange_strong(tst_val, new_val)) {
 			return true;
-		} else {
-			std::this_thread::yield(); // other threads can push work to the queue now
 		}
 	}
 
@@ -75,7 +69,7 @@ bool ThreadSafeElement::WriteResource() {
 }
 
 void ThreadSafeElement::FinishWriteResource() {
-	_readerCount.store(0);
+	_readerCount = 0l;
 }
 
 int ThreadSafeElement::GetStatus() {

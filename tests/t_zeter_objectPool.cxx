@@ -1,6 +1,6 @@
 #include <assert.h>
 #include "zeter_tests.h"
-#include "threadSafeElement.h"
+#include "synchronization/threadSafeElement.h"
 #include <boost/pool/object_pool.hpp>
 #include "memory/growthByNextPowerOfTwo.h"
 #include "memory/arrayAllocator.h"

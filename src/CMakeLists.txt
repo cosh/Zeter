@@ -1,7 +1,7 @@
 INCLUDE_DIRECTORIES(../include/)
 
 SET(ZETER_SRC ${ZETER_SRC}
-  threadSafeElement.cpp
+  synchronization/threadSafeElement.cpp
   memory/arrayAllocator.cpp
   memory/growthByNextPowerOfTwo.cpp
 )

@@ -32,10 +32,10 @@
 class ThreadSafeElement {
 
 private:
-	std::atomic<int> _readerCount;
+	std::atomic<long> _readerCount;
 
 public:
-	ThreadSafeElement() : _readerCount(0) {}
+	ThreadSafeElement() : _readerCount(0l) {}
 
 	bool ReadResource();
 	void FinishReadResource ();
