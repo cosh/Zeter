@@ -4,11 +4,13 @@
 #include <boost/pool/object_pool.hpp>
 #include "memory/growthByNextPowerOfTwo.h"
 #include "memory/arrayAllocator.h"
+#include "synchronization/lockableElement.h"
 
 TEST(test_zeter_arrayAllocator_basic) {
 
 	const std::size_t size = 10;
-	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator = new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
+	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator =
+			new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
 
 	ThreadSafeElement* firstElementOfArray_0 = allocator->GetArray(0);
 	firstElementOfArray_0->ReadResource();
@@ -30,7 +32,41 @@ TEST(test_zeter_arrayAllocator_basic) {
 	firstElementOfArray_4->ReadResource();
 	firstElementOfArray_4->FinishReadResource();
 
-	delete(allocator);
+	delete (allocator);
+
+	return 0;
+}
+
+TEST(test_zeter_arrayAllocator_mass) {
+
+	const std::size_t size = 10;
+	ArrayAllocator<LockableElement, GrowthByNextPowerOfTwo, size>* allocator =
+			new ArrayAllocator<LockableElement, GrowthByNextPowerOfTwo, size>();
+
+	for (int i = 0; i < 1000000; ++i) {
+		LockableElement* firstElementOfArray_0 = allocator->GetArray(0);
+		firstElementOfArray_0->tryLock();
+		firstElementOfArray_0->unLock();
+
+		LockableElement* firstElementOfArray_1 = allocator->GetArray(1);
+		firstElementOfArray_1->tryLock();
+		firstElementOfArray_1->unLock();
+
+		LockableElement* firstElementOfArray_2 = allocator->GetArray(2);
+		firstElementOfArray_2->tryLock();
+		firstElementOfArray_2->unLock();
+
+		LockableElement* firstElementOfArray_3 = allocator->GetArray(4);
+		firstElementOfArray_3->tryLock();
+		firstElementOfArray_3->unLock();
+
+		LockableElement* firstElementOfArray_4 = allocator->GetArray(126);
+		firstElementOfArray_4->tryLock();
+		firstElementOfArray_4->unLock();
+
+		assert(sizeof(firstElementOfArray_4) > sizeof(firstElementOfArray_0));
+
+	}
 
 	return 0;
 }
@@ -94,7 +130,6 @@ TEST(test_zeter_growth_GetSlotForSize) {
 	newValue = growth.GetSlotForSize(3);
 	assert(newValue == 1);
 
-
 	newValue = growth.GetSlotForSize(4);
 	assert(newValue == 2);
 
@@ -111,6 +146,7 @@ int main() {
 	test_zeter_growth_GetNextSize();
 	test_zeter_growth_GetSlotForSize();
 	test_zeter_arrayAllocator_basic();
+	test_zeter_arrayAllocator_mass();
 
 	return err ? -1 : 0;
 }
