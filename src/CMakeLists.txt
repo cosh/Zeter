@@ -4,6 +4,7 @@ SET(ZETER_SRC ${ZETER_SRC}
   synchronization/threadSafeElement.cpp
   synchronization/lockableElement.cpp
   memory/arrayAllocator.cpp
+  memory/arrayMetaData.cpp
   memory/growthByNextPowerOfTwo.cpp
 )
 

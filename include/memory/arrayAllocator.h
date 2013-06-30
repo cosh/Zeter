@@ -29,6 +29,7 @@
 
 #include "boost/pool/pool.hpp"
 #include <array>
+#include "arrayMetaData.h"
 
 /**
  * TObject is the type of the object that is inside the arrays
@@ -41,6 +42,7 @@ private:
 	const std::size_t _slots;
 	TArraySizer* _sizer;
 	std::array<boost::pool<>*, slots>* _poolArray;
+	std::array<ArrayMetaData*, slots>* _arrayMetaData;
 
 public:
 
@@ -50,6 +52,7 @@ public:
 
 		_sizer = new TArraySizer();
 		_poolArray = new std::array<boost::pool<>*, slots>();
+		_arrayMetaData = new std::array<ArrayMetaData*, slots>();
 
 		for (std::size_t i = 0; i < _slots; ++i) {
 			size_t templateSize = 0;
@@ -58,6 +61,7 @@ public:
 			templateSize = sizeof(TObject*) * sizeOfSlot;
 
 			_poolArray->at(i) = new boost::pool<>(templateSize);
+			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i), templateSize);
 		}
 
 	}

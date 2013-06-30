@@ -63,9 +63,6 @@ TEST(test_zeter_arrayAllocator_mass) {
 		LockableElement* firstElementOfArray_4 = allocator->GetArray(126);
 		firstElementOfArray_4->tryLock();
 		firstElementOfArray_4->unLock();
-
-		assert(sizeof(firstElementOfArray_4) > sizeof(firstElementOfArray_0));
-
 	}
 
 	return 0;
