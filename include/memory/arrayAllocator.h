@@ -80,15 +80,23 @@ public:
 
 		delete(_poolArray);
 		delete(_sizer);
+		delete(_arrayMetaData);
+		delete(_arrayObjectPool);
 	}
 
 	ArrayObject<TObject> * const GetArray(const int size)
 	{
 		int index = _sizer->GetSlotForSize(_sizer->GetNextSize(size));
-		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->malloc());
+		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->ordered_malloc());
 		ArrayMetaData * const metaData = _arrayMetaData->at(index);
 
 		return _arrayObjectPool->construct(firstElement, metaData);
+	}
+
+	void Free(ArrayObject<TObject> * const toBeFreed)
+	{
+		toBeFreed->GetCorrespondingPool().ordered_free(toBeFreed->GetFirstElement());
+		_arrayObjectPool->destroy(toBeFreed);
 	}
 };
 
