@@ -5,6 +5,7 @@ SET(ZETER_SRC ${ZETER_SRC}
   synchronization/lockableElement.cpp
   memory/arrayAllocator.cpp
   memory/arrayMetaData.cpp
+  memory/arrayObject.cpp
   memory/growthByNextPowerOfTwo.cpp
 )
 

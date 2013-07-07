@@ -12,25 +12,25 @@ TEST(test_zeter_arrayAllocator_basic) {
 	ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>* allocator =
 			new ArrayAllocator<ThreadSafeElement, GrowthByNextPowerOfTwo, size>();
 
-	ThreadSafeElement* firstElementOfArray_0 = allocator->GetArray(0);
-	firstElementOfArray_0->ReadResource();
-	firstElementOfArray_0->FinishReadResource();
+	ArrayObject<ThreadSafeElement>* const firstElementOfArray_0 = allocator->GetArray(0);
+	firstElementOfArray_0->GetFirstElement()->ReadResource();
+	firstElementOfArray_0->GetFirstElement()->FinishReadResource();
 
-	ThreadSafeElement* firstElementOfArray_1 = allocator->GetArray(1);
-	firstElementOfArray_1->ReadResource();
-	firstElementOfArray_1->FinishReadResource();
+	ArrayObject<ThreadSafeElement>* const firstElementOfArray_1 = allocator->GetArray(1);
+	firstElementOfArray_1->GetFirstElement()->ReadResource();
+	firstElementOfArray_1->GetFirstElement()->FinishReadResource();
 
-	ThreadSafeElement* firstElementOfArray_2 = allocator->GetArray(2);
-	firstElementOfArray_2->ReadResource();
-	firstElementOfArray_2->FinishReadResource();
+	ArrayObject<ThreadSafeElement>* const firstElementOfArray_2 = allocator->GetArray(2);
+	firstElementOfArray_2->GetFirstElement()->ReadResource();
+	firstElementOfArray_2->GetFirstElement()->FinishReadResource();
 
-	ThreadSafeElement* firstElementOfArray_3 = allocator->GetArray(4);
-	firstElementOfArray_3->ReadResource();
-	firstElementOfArray_3->FinishReadResource();
+	ArrayObject<ThreadSafeElement>* const firstElementOfArray_3 = allocator->GetArray(4);
+	firstElementOfArray_3->GetFirstElement()->ReadResource();
+	firstElementOfArray_3->GetFirstElement()->FinishReadResource();
 
-	ThreadSafeElement* firstElementOfArray_4 = allocator->GetArray(126);
-	firstElementOfArray_4->ReadResource();
-	firstElementOfArray_4->FinishReadResource();
+	ArrayObject<ThreadSafeElement>* const firstElementOfArray_4 = allocator->GetArray(126);
+	firstElementOfArray_4->GetFirstElement()->ReadResource();
+	firstElementOfArray_4->GetFirstElement()->FinishReadResource();
 
 	delete (allocator);
 
@@ -44,25 +44,25 @@ TEST(test_zeter_arrayAllocator_mass) {
 			new ArrayAllocator<LockableElement, GrowthByNextPowerOfTwo, size>();
 
 	for (int i = 0; i < 1000000; ++i) {
-		LockableElement* firstElementOfArray_0 = allocator->GetArray(0);
-		firstElementOfArray_0->tryLock();
-		firstElementOfArray_0->unLock();
+		ArrayObject<LockableElement>* const firstElementOfArray_0 = allocator->GetArray(0);
+		firstElementOfArray_0->GetFirstElement()->tryLock();
+		firstElementOfArray_0->GetFirstElement()->unLock();
 
-		LockableElement* firstElementOfArray_1 = allocator->GetArray(1);
-		firstElementOfArray_1->tryLock();
-		firstElementOfArray_1->unLock();
+		ArrayObject<LockableElement>* const firstElementOfArray_1 = allocator->GetArray(1);
+		firstElementOfArray_1->GetFirstElement()->tryLock();
+		firstElementOfArray_1->GetFirstElement()->unLock();
 
-		LockableElement* firstElementOfArray_2 = allocator->GetArray(2);
-		firstElementOfArray_2->tryLock();
-		firstElementOfArray_2->unLock();
+		ArrayObject<LockableElement>* const firstElementOfArray_2 = allocator->GetArray(2);
+		firstElementOfArray_2->GetFirstElement()->tryLock();
+		firstElementOfArray_2->GetFirstElement()->unLock();
 
-		LockableElement* firstElementOfArray_3 = allocator->GetArray(4);
-		firstElementOfArray_3->tryLock();
-		firstElementOfArray_3->unLock();
+		ArrayObject<LockableElement>* const firstElementOfArray_3 = allocator->GetArray(4);
+		firstElementOfArray_3->GetFirstElement()->tryLock();
+		firstElementOfArray_3->GetFirstElement()->unLock();
 
-		LockableElement* firstElementOfArray_4 = allocator->GetArray(126);
-		firstElementOfArray_4->tryLock();
-		firstElementOfArray_4->unLock();
+		ArrayObject<LockableElement>* const firstElementOfArray_4 = allocator->GetArray(126);
+		firstElementOfArray_4->GetFirstElement()->tryLock();
+		firstElementOfArray_4->GetFirstElement()->unLock();
 	}
 
 	return 0;

@@ -28,8 +28,10 @@
 #define _arrayAllocator_h
 
 #include "boost/pool/pool.hpp"
+#include "boost/pool/object_pool.hpp"
 #include <array>
 #include "arrayMetaData.h"
+#include "arrayObject.h"
 
 /**
  * TObject is the type of the object that is inside the arrays
@@ -41,8 +43,11 @@ class ArrayAllocator {
 private:
 	const std::size_t _slots;
 	TArraySizer* _sizer;
+
 	std::array<boost::pool<>*, slots>* _poolArray;
 	std::array<ArrayMetaData*, slots>* _arrayMetaData;
+
+	boost::object_pool<ArrayObject<TObject>>* _arrayObjectPool;
 
 public:
 
@@ -64,6 +69,8 @@ public:
 			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i), templateSize);
 		}
 
+		_arrayObjectPool = new boost::object_pool<ArrayObject<TObject>>();
+
 	}
 
 	~ArrayAllocator() {
@@ -75,9 +82,13 @@ public:
 		delete(_sizer);
 	}
 
-	TObject * const GetArray(const int size)
+	ArrayObject<TObject> * const GetArray(const int size)
 	{
-		return static_cast<TObject *>(_poolArray->at(_sizer->GetSlotForSize(_sizer->GetNextSize(size)))->malloc());
+		int index = _sizer->GetSlotForSize(_sizer->GetNextSize(size));
+		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->malloc());
+		ArrayMetaData * const metaData = _arrayMetaData->at(index);
+
+		return _arrayObjectPool->construct(firstElement, metaData);
 	}
 };
 
