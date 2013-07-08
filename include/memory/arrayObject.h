@@ -49,6 +49,12 @@ public:
 	{
 		return _first;
 	}
+
+	ArrayMetaData * const GetArrayMetaData()
+	{
+		return _metaData;
+	}
+
 };
 
 #endif

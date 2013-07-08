@@ -66,7 +66,7 @@ public:
 			templateSize = sizeof(TObject*) * sizeOfSlot;
 
 			_poolArray->at(i) = new boost::pool<>(templateSize);
-			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i), templateSize);
+			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i), sizeOfSlot);
 		}
 
 		_arrayObjectPool = new boost::object_pool<ArrayObject<TObject>>();
@@ -87,7 +87,7 @@ public:
 	ArrayObject<TObject> * const GetArray(const int size)
 	{
 		int index = _sizer->GetSlotForSize(_sizer->GetNextSize(size));
-		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->ordered_malloc());
+		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->malloc());
 		ArrayMetaData * const metaData = _arrayMetaData->at(index);
 
 		return _arrayObjectPool->construct(firstElement, metaData);
@@ -95,7 +95,7 @@ public:
 
 	void Free(ArrayObject<TObject> * const toBeFreed)
 	{
-		toBeFreed->GetCorrespondingPool().ordered_free(toBeFreed->GetFirstElement());
+		toBeFreed->GetArrayMetaData()->GetCorrespondingPool()->free(toBeFreed->GetFirstElement());
 		_arrayObjectPool->destroy(toBeFreed);
 	}
 };

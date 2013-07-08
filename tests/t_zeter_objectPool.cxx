@@ -43,26 +43,21 @@ TEST(test_zeter_arrayAllocator_mass) {
 	ArrayAllocator<LockableElement, GrowthByNextPowerOfTwo, size>* allocator =
 			new ArrayAllocator<LockableElement, GrowthByNextPowerOfTwo, size>();
 
-	for (int i = 0; i < 1000000; ++i) {
-		ArrayObject<LockableElement>* const firstElementOfArray_0 = allocator->GetArray(0);
-		firstElementOfArray_0->GetFirstElement()->tryLock();
-		firstElementOfArray_0->GetFirstElement()->unLock();
+	const int numberOfIterations = 10000;
 
-		ArrayObject<LockableElement>* const firstElementOfArray_1 = allocator->GetArray(1);
-		firstElementOfArray_1->GetFirstElement()->tryLock();
-		firstElementOfArray_1->GetFirstElement()->unLock();
+	ArrayObject<LockableElement>* array[numberOfIterations];
 
-		ArrayObject<LockableElement>* const firstElementOfArray_2 = allocator->GetArray(2);
-		firstElementOfArray_2->GetFirstElement()->tryLock();
-		firstElementOfArray_2->GetFirstElement()->unLock();
-
-		ArrayObject<LockableElement>* const firstElementOfArray_3 = allocator->GetArray(4);
-		firstElementOfArray_3->GetFirstElement()->tryLock();
-		firstElementOfArray_3->GetFirstElement()->unLock();
-
+	for (int i = 0; i < numberOfIterations; ++i) {
 		ArrayObject<LockableElement>* const firstElementOfArray_4 = allocator->GetArray(126);
 		firstElementOfArray_4->GetFirstElement()->tryLock();
 		firstElementOfArray_4->GetFirstElement()->unLock();
+
+		array[i] = firstElementOfArray_4;
+	}
+
+	for(int i = 0; i < numberOfIterations; ++i)
+	{
+		allocator->Free(array[i]);
 	}
 
 	return 0;
