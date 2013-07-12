@@ -5,6 +5,7 @@ INSTALL(FILES
         memory/arrayMetaData.h
         memory/arrayObject.h
         memory/growthByNextPowerOfTwo.h
+        collections/lock_free_queue.h
         DESTINATION include/
         )
 

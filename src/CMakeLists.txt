@@ -7,6 +7,7 @@ SET(ZETER_SRC ${ZETER_SRC}
   memory/arrayMetaData.cpp
   memory/arrayObject.cpp
   memory/growthByNextPowerOfTwo.cpp
+  collections/lock_free_queue.cpp
 )
 
 ADD_LIBRARY(ZETER ${ZETER_SRC})
