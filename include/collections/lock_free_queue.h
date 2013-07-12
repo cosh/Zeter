@@ -34,16 +34,21 @@ template<typename T>
 class lock_free_queue {
 private:
 	struct node;
+
 	struct counted_node_ptr {
 		int external_count;
 		node* ptr;
 	};
+
 	std::atomic<counted_node_ptr> head;
+
 	std::atomic<counted_node_ptr> tail;
+
 	struct node_counter {
 		unsigned internal_count :30;
 		unsigned external_counters :2;
 	};
+
 	struct node {
 		std::atomic<T*> data;
 		std::atomic<node_counter> count;
