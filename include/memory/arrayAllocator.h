@@ -83,6 +83,7 @@ public:
 		}
 
 		_arrayObjectPool = new boost::object_pool<ArrayObject<TObject>>();
+		_arrayObjectPool->set_next_size(next_size_base);
 
 	}
 
