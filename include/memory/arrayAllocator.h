@@ -52,12 +52,16 @@ private:
 public:
 
 	explicit ArrayAllocator() :
-			_slots(slots)
-			{
+			_slots(slots) {
 
 		_sizer = new TArraySizer();
 		_poolArray = new std::array<boost::pool<>*, slots>();
 		_arrayMetaData = new std::array<ArrayMetaData*, slots>();
+
+		const size_t next_size_base = 1000000;
+		const size_t next_size_default = 32;
+
+		const size_t max_size = 0;
 
 		for (std::size_t i = 0; i < _slots; ++i) {
 			size_t templateSize = 0;
@@ -65,8 +69,17 @@ public:
 
 			templateSize = sizeof(TObject*) * sizeOfSlot;
 
-			_poolArray->at(i) = new boost::pool<>(templateSize);
-			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i), sizeOfSlot);
+			//The value of this parameter is passed to the underlying Pool when it is created and
+			//specifies the number of chunks to allocate in the first allocation request (defaults to 32).
+			size_t next_size = next_size_base / sizeOfSlot;
+			if (next_size < next_size_default) {
+				next_size = next_size_default;
+			}
+
+			_poolArray->at(i) = new boost::pool<>(templateSize, next_size,
+					max_size);
+			_arrayMetaData->at(i) = new ArrayMetaData(_poolArray->at(i),
+					sizeOfSlot);
 		}
 
 		_arrayObjectPool = new boost::object_pool<ArrayObject<TObject>>();
@@ -75,27 +88,27 @@ public:
 
 	~ArrayAllocator() {
 		for (std::size_t i = 0; i < _slots; ++i) {
-			delete(_poolArray->at(i));
+			delete (_poolArray->at(i));
 		}
 
-		delete(_poolArray);
-		delete(_sizer);
-		delete(_arrayMetaData);
-		delete(_arrayObjectPool);
+		delete (_poolArray);
+		delete (_sizer);
+		delete (_arrayMetaData);
+		delete (_arrayObjectPool);
 	}
 
-	ArrayObject<TObject> * const GetArray(const int size)
-	{
+	ArrayObject<TObject> * const GetArray(const int size) {
 		int index = _sizer->GetSlotForSize(_sizer->GetNextSize(size));
-		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(index)->ordered_malloc());
+		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(
+				index)->ordered_malloc());
 		ArrayMetaData * const metaData = _arrayMetaData->at(index);
 
 		return _arrayObjectPool->construct(firstElement, metaData);
 	}
 
-	void Free(ArrayObject<TObject> * const toBeFreed)
-	{
-		toBeFreed->GetArrayMetaData()->GetCorrespondingPool()->ordered_free(toBeFreed->GetFirstElement());
+	void Free(ArrayObject<TObject> * const toBeFreed) {
+		toBeFreed->GetArrayMetaData()->GetCorrespondingPool()->ordered_free(
+				toBeFreed->GetFirstElement());
 		_arrayObjectPool->destroy(toBeFreed);
 	}
 };
