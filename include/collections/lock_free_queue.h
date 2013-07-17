@@ -133,6 +133,7 @@ public:
 			}
 			ptr->release_ref();
 		}
+		return nullptr;
 	}
 
 	void push(T new_value) {
