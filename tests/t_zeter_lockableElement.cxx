@@ -10,7 +10,14 @@
 #include "synchronization/threadSafeElement.h"
 #include "synchronization/lockableElement.h"
 
+bool go = false;
+
 void LockSth(int count, LockableElement* elemenet) {
+
+	while(!go)
+	{
+		// do nothing
+	}
 
 	for (int i = 0; i < count; ++i) {
 
@@ -34,6 +41,9 @@ TEST(test_zeter_lockableElement) {
 	std::thread d(LockSth, lockCount, element);
 	std::thread e(LockSth, lockCount, element);
 	std::thread f(LockSth, lockCount, element);
+
+	go = true;
+
 	a.join();
 	b.join();
 	c.join();
