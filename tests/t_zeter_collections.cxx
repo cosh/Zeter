@@ -10,8 +10,41 @@
 #include "collections/lock_free_queue.h"
 #include "synchronization/lockableElement.h"
 #include "boost/lockfree/queue.hpp"
+#include <boost/thread.hpp>
 
-using boost::lockfree::queue;
+boost::atomic_int producer_count(0);
+boost::atomic_int consumer_count(0);
+
+boost::lockfree::queue<LockableElement*> queue(10000);
+
+const int iterations = 100000;
+const int producer_thread_count = 4;
+const int consumer_thread_count = 4;
+
+void producer(void)
+{
+    for (int i = 0; i != iterations; ++i) {
+
+    	LockableElement * le = new LockableElement();
+    	++producer_count;
+
+        while (!queue.push(le));
+    }
+}
+
+boost::atomic<bool> done (false);
+void consumer(void)
+{
+    LockableElement * value;
+    while (!done) {
+        while (queue.pop(value))
+            ++consumer_count;
+    }
+
+    while (queue.pop(value))
+        ++consumer_count;
+}
+
 
 TEST(test_zeter_lock_free_queue_basic) {
 	//sth for later...
@@ -41,17 +74,27 @@ TEST(test_zeter_lock_free_queue_basic) {
 
 TEST(test_zeter_boost_queue_basic) {
 
-	LockableElement * le = new LockableElement();
-	boost::lockfree::queue<LockableElement*>* q = new boost::lockfree::queue<
-			LockableElement*>(1000000);
+	using namespace std;
+	    cout << "boost::lockfree::queue is ";
+	    if (!queue.is_lock_free())
+	        cout << "not ";
+	    cout << "lockfree" << endl;
 
-	for (int i = 0; i < 1000000; i++) {
-		q->push(le);
-	}
+	    boost::thread_group producer_threads, consumer_threads;
 
-	for (int i = 0; i < 1000000; i++) {
-		q->pop(le);
-	}
+	    for (int i = 0; i != producer_thread_count; ++i)
+	        producer_threads.create_thread(producer);
+
+	    for (int i = 0; i != consumer_thread_count; ++i)
+	        consumer_threads.create_thread(consumer);
+
+	    producer_threads.join_all();
+	    done = true;
+
+	    consumer_threads.join_all();
+
+	    cout << "produced " << producer_count << " objects." << endl;
+	    cout << "consumed " << consumer_count << " objects." << endl;
 
 	return 0;
 }
