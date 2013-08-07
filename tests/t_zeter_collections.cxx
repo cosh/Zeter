@@ -93,8 +93,8 @@ TEST(test_zeter_boost_queue_basic) {
 
 	    consumer_threads.join_all();
 
-	    cout << "produced " << producer_count << " objects." << endl;
-	    cout << "consumed " << consumer_count << " objects." << endl;
+	    cout << "produced " << producer_count << " objects.";
+	    cout << "consumed " << consumer_count << " objects.";
 
 	return 0;
 }

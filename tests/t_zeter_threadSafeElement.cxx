@@ -9,6 +9,8 @@
 #include <chrono>
 #include "synchronization/threadSafeElement.h"
 
+std::atomic<bool> go(false);
+
 TEST(test_zeter_atomc_basic) {
 
 	std::atomic<int> atomicInt(0);
@@ -48,6 +50,12 @@ TEST(test_zeter_atomc_basic_compareExchange) {
 }
 
 void Read(int count, ThreadSafeElement* elemenet) {
+
+	while(!go)
+		{
+			// do nothing
+		}
+
 	for (int i = 0; i < count; ++i) {
 		if (elemenet->ReadResource()) {
 			elemenet->FinishReadResource();
@@ -58,6 +66,11 @@ void Read(int count, ThreadSafeElement* elemenet) {
 }
 
 void Write(int count, ThreadSafeElement* elemenet) {
+
+	while(!go)
+		{
+			// do nothing
+		}
 
 	for (int i = 0; i < count; ++i) {
 
@@ -96,9 +109,14 @@ TEST(test_zeter_threadSafeElement_read) {
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
+	go = false;
+
 	std::thread a(Read, readCount, element);
 	std::thread b(Read, readCount, element);
 	std::thread c(Read, readCount, element);
+
+	go = true;
+
 	a.join();
 	b.join();
 	c.join();
@@ -114,10 +132,15 @@ TEST(test_zeter_threadSafeElement_write) {
 
 	ThreadSafeElement *element = new ThreadSafeElement();
 
+	go = false;
+
 	std::thread d(Write, writeCount, element);
 	std::thread e(Write, writeCount, element);
 	std::thread f(Write, writeCount, element);
 	std::thread g(Write, writeCount, element);
+
+	go = true;
+
 	d.join();
 	e.join();
 	f.join();
