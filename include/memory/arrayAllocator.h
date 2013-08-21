@@ -3,7 +3,7 @@
  *
  *  Created on: 17.05.2013
  *      Author: cosh
- *     Purpose:
+ *     Purpose: An array allocator that uses pools
  *
  * Copyright (c) 2013 Henning Rauch
  *
@@ -41,16 +41,36 @@ template<class TObject, class TArraySizer, std::size_t slots>
 class ArrayAllocator {
 
 private:
+	/**
+	 * The number of object pools
+	 */
 	const std::size_t _slots;
+
+	/**
+	 * The object that is responsible for sizing the pools
+	 */
 	TArraySizer* _sizer;
 
+	/**
+	 * The array of pools
+	 */
 	std::array<boost::pool<>*, slots>* _poolArray;
+
+	/**
+	 * The array of meta data
+	 */
 	std::array<ArrayMetaData*, slots>* _arrayMetaData;
 
+	/**
+	 * The pool of array objects
+	 */
 	boost::object_pool<ArrayObject<TObject>>* _arrayObjectPool;
 
 public:
 
+	/**
+	 * Constructor
+	 */
 	explicit ArrayAllocator() :
 			_slots(slots) {
 
@@ -87,6 +107,9 @@ public:
 
 	}
 
+	/**
+	 * Destructor
+	 */
 	~ArrayAllocator() {
 		for (std::size_t i = 0; i < _slots; ++i) {
 			delete (_poolArray->at(i));
@@ -98,6 +121,11 @@ public:
 		delete (_arrayObjectPool);
 	}
 
+	/**
+	 * Gets an array for a given size (or bigger, depending on the sizer)
+	 * @param size The minimum size
+	 * @return An array object that contains the desired array and the corresponding meta data
+	 */
 	ArrayObject<TObject> * const GetArray(const int size) {
 		int index = _sizer->GetSlotForSize(_sizer->GetNextSize(size));
 		TObject * const firstElement = static_cast<TObject *>(_poolArray->at(
@@ -107,6 +135,10 @@ public:
 		return _arrayObjectPool->construct(firstElement, metaData);
 	}
 
+	/**
+	 * Frees the memory of the array
+	 * @param toBeFreed The array object that should be freed
+	 */
 	void Free(ArrayObject<TObject> * const toBeFreed) {
 		toBeFreed->GetArrayMetaData()->GetCorrespondingPool()->ordered_free(
 				toBeFreed->GetFirstElement());

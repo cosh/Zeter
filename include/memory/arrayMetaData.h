@@ -3,7 +3,7 @@
  *
  *  Created on: 30.06.2013
  *      Author: cosh
- *     Purpose:
+ *     Purpose: Helper class to know the size of an object and the corresponding pool
  *
  * Copyright (c) 2013 Henning Rauch
  *
@@ -32,12 +32,34 @@
 class ArrayMetaData {
 
 private:
+	/**
+	 * The responsible pool
+	 */
 	boost::pool<>* const _responsiblePool;
+
+	/**
+	 * The size of the array
+	 */
 	const size_t _size;
 
 public:
+	/**
+	 * Constructor
+	 * @param pool The responsible pool
+	 * @param arraySize The size of the array
+	 */
 	explicit ArrayMetaData(boost::pool<>* const pool, const size_t arraySize);
+
+	/**
+	 * Gets the pool that is responsible for the array
+	 * @return The pool
+	 */
 	boost::pool<>* const GetCorrespondingPool();
+
+	/**
+	 * Gets the size of the array
+	 * @return The size
+	 */
 	const size_t GetSizeOfArray();
 };
 
