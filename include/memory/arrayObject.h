@@ -3,7 +3,7 @@
  *
  *  Created on: 05.07.2013
  *      Author: cosh
- *     Purpose:
+ *     Purpose: The container for the arrays containing payload and meta data
  *
  * Copyright (c) 2013 Henning Rauch
  *
@@ -36,25 +36,54 @@ template<class TObject>
 class ArrayObject {
 
 private:
+
+	/**
+	 * Pointer to the first object in the array
+	 */
 	TObject * const _first;
+
+	/**
+	 * The array meta data
+	 */
 	ArrayMetaData * const _metaData;
 
 public:
 
+	/**
+	 * Creates a new array object
+	 * @param first The pointer to the first element in the array
+	 * @param metaData The pointer to the corresponding meta data
+	 */
 	explicit ArrayObject(TObject * const first, ArrayMetaData * const metaData) :
 			_first(first), _metaData(metaData) {
 	}
 
+	/**
+	 * Gets the first element of the array
+	 * @return First element of the array
+	 */
 	TObject * const GetFirstElement()
 	{
 		return _first;
 	}
 
+	/**
+	 * Gets the array meta data
+	 * @return The meta data
+	 */
 	ArrayMetaData * const GetArrayMetaData()
 	{
 		return _metaData;
 	}
 
+	/**
+	 * Gets the size of the array
+	 * @return Size
+	 */
+	size_t GetSize()
+	{
+		return _metaData->GetSizeOfArray();
+	}
 };
 
 #endif

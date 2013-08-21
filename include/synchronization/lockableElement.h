@@ -3,7 +3,7 @@
  *
  *  Created on: 20.06.2013
  *      Author: cosh
- *     Purpose:
+ *     Purpose: Simple and fast way to lock sth without using a mutex
  *
  * Copyright (c) 2013 Henning Rauch
  *
@@ -32,12 +32,28 @@
 class LockableElement {
 
 private:
+
+	/**
+	 * The lock element
+	 */
 	std::atomic_flag _lock = ATOMIC_FLAG_INIT;
 
 public:
+
+	/**
+	 * Creates a new lockable element
+	 */
 	LockableElement() : _lock(ATOMIC_FLAG_INIT) {}
 
+	/**
+	 * Tries to lock
+	 * @return True if it was possible to lock
+	 */
 	bool tryLock();
+
+	/**
+	 * Unlock
+	 */
 	void unLock ();
 };
 

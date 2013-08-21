@@ -3,7 +3,7 @@
  *
  *  Created on: 17.05.2013
  *      Author: cosh
- *     Purpose:
+ *     Purpose: A growth implementation that returns the next power of two
  *
  * Copyright (c) 2013 Henning Rauch
  *
@@ -30,12 +30,32 @@
 class GrowthByNextPowerOfTwo {
 
 private:
+	/**
+	 * Determines of this is a power of two
+	 * @param n The interesting number
+	 * @return True or false
+	 */
 	bool IsPowerOf2(long long n);
 
 public:
 
+	/**
+	 * Gets the next size to a given size
+	 * @param size The given size
+	 */
 	long long GetNextSize(long long size);
+
+	/**
+	 * Gets the size of a given slot
+	 * @param slotIntex The index of the slot
+	 */
 	long long GetSizeOfSlot(int slotIntex);
+
+	/**
+	 * Gives the slot for a size
+	 * @param n The given size
+	 * @return The slot
+	 */
 	int GetSlotForSize(long long n);
 };
 
