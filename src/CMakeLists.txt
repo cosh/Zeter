@@ -1,13 +1,11 @@
 INCLUDE_DIRECTORIES(../include/)
 
 SET(ZETER_SRC ${ZETER_SRC}
-  synchronization/threadSafeElement.cpp
   synchronization/lockableElement.cpp
   memory/arrayAllocator.cpp
   memory/arrayMetaData.cpp
   memory/arrayObject.cpp
   memory/growthByNextPowerOfTwo.cpp
-  collections/lock_free_queue.cpp
 )
 
 ADD_LIBRARY(ZETER ${ZETER_SRC})

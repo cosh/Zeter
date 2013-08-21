@@ -7,7 +7,6 @@
 #include <atomic>
 #include <thread>
 #include <chrono>
-#include "synchronization/threadSafeElement.h"
 #include "synchronization/lockableElement.h"
 
 bool go = false;

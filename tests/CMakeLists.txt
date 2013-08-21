@@ -10,6 +10,4 @@ MACRO(ZETER_TEST name)
 ENDMACRO(ZETER_TEST name)
 
 ZETER_TEST(t_zeter_lockableElement)
-ZETER_TEST(t_zeter_threadSafeElement)
 ZETER_TEST(t_zeter_objectPool)
-ZETER_TEST(t_zeter_collections)
