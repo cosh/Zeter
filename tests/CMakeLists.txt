@@ -1,7 +1,6 @@
 INCLUDE_DIRECTORIES(../include/)
 INCLUDE_DIRECTORIES(../include/memory)
 INCLUDE_DIRECTORIES(../include/synchronization)
-INCLUDE_DIRECTORIES(../include/collections)
 
 MACRO(ZETER_TEST name)
         ADD_EXECUTABLE(${name} ${name}.cxx)
